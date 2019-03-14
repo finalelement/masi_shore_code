@@ -10,7 +10,8 @@ from dipy.reconst.shore import shore_matrix
 import scipy as sp
 from scipy.optimize import minimize
 from scipy.linalg import pinv
-from zeta_minimization import returns_best_zeta, return_shore_coeffs_preds, return_mse_vector_coeffs_preds, return_mse_vector_coeffs_preds_log, return_shore_basis
+from zeta_minimization import returns_best_zeta, return_shore_coeffs_preds
+from zeta_minimization import return_mse_vector_coeffs_preds, return_mse_vector_coeffs_preds_log, return_shore_basis
 from zeta_minimization import return_overall_mse_vector_coeffs_preds
 
 def call_minimization_shore_on_data(data_path, bval_path, bvec_path, data_var, zeta_flag, log_flag, shore_para_dict):
@@ -133,6 +134,9 @@ def call_minimization_shore_on_data_with_basis_mse(data_path, bval_path, bvec_pa
     bvec_path = os.path.normpath(bvec_path)
 
     bvals, bvecs = read_bvals_bvecs(bval_path, bvec_path)
+
+    # DELETE THIS LINE ONCE YOU ARE DONE PLAYING WITH FOD ERROR
+    #bvals[1:] = 3000
     gtab = gradient_table(bvals, bvecs)
 
     print('Gradient Table Loaded and Ready for use \n')
@@ -162,7 +166,7 @@ def call_minimization_shore_on_data_with_basis_mse(data_path, bval_path, bvec_pa
 
     if log_flag == 0:
         #mse_vector = return_mse_vector_coeffs_preds(data, shore_preds, plot_title)
-        mse_vector = return_overall_mse_vector_coeffs_preds(data, shore_preds, plot_title)
+        mse_vector = return_mse_vector_coeffs_preds(data, shore_preds, plot_title)
 
     if log_flag == 1:
         plot_title = data_var + ' Error b/w Shore & Orig Data, Log Enforced, Zeta: ' + str(best_zeta)

@@ -1,8 +1,9 @@
 from scipy.io import loadmat, savemat
 from keras.layers import Input, Dense, Dropout
-from keras.models import Sequential
-from keras.layers import Activation
+from keras.models import Sequential, Model
+from keras.layers import Activation, Add
 from keras.callbacks import EarlyStopping, CSVLogger
+from keras.optimizers import RMSprop
 import tensorflow as tf
 from keras import backend as K
 import os
@@ -77,6 +78,81 @@ def build_base_network():
     model.compile(loss='mse', optimizer='RMSProp', metrics=['mse', 'mae'])
     model.summary()
     return model
+
+def build_base_resnet():
+    input_dims = 50
+    inputs = Input(shape=(input_dims,))
+
+    # split0 = Input(shape=(1,))
+    # split1 = Input(shape=(5,))
+    # split2 = Input(shape=(9,))
+
+    # Split 0 is 0th order, Split 1 is 2nd order, Split 2 is 4th order
+    # split0, split1, split2 = tf.split(inputs, [1, 5, 9], 1)
+
+    # 0th Order Network Flow
+    x1 = Dense(400, activation='elu')(inputs)
+    x2 = Dense(50, activation='elu')(x1)
+    x3 = Dense(200, activation='elu')(x2)
+    x4 = Dense(50, activation='elu')(x3)
+    res_add = Add()([x2, x4])
+    x5 = Dense(200, activation='elu')(res_add)
+    x6 = Dense(50, activation='linear')(x5)
+
+    model = Model(input=inputs, output=x6)
+
+    opt_func = RMSprop(lr=0.0001)
+    model.compile(loss='mse', optimizer=opt_func)
+    print(model.summary())
+    return model
+
+
+def build_base_resnet_r8_to_r6():
+    input_dims = 95
+    inputs = Input(shape=(input_dims,))
+
+    # Split 0 is 0th order, Split 1 is 2nd order, Split 2 is 4th order
+    # split0, split1, split2 = tf.split(inputs, [1, 5, 9], 1)
+
+    # 0th Order Network Flow
+    x1 = Dense(400, activation='elu')(inputs)
+    x2 = Dense(50, activation='elu')(x1)
+    x3 = Dense(200, activation='elu')(x2)
+    x4 = Dense(50, activation='elu')(x3)
+    res_add = Add()([x2, x4])
+    x5 = Dense(200, activation='elu')(res_add)
+    x6 = Dense(50, activation='linear')(x5)
+
+    model = Model(input=inputs, output=x6)
+
+    opt_func = RMSprop(lr=0.0001)
+    model.compile(loss='mse', optimizer=opt_func)
+    print(model.summary())
+    return model
+
+def build_base_resnet_r8():
+    input_dims = 95
+    inputs = Input(shape=(input_dims,))
+
+    # Split 0 is 0th order, Split 1 is 2nd order, Split 2 is 4th order
+    # split0, split1, split2 = tf.split(inputs, [1, 5, 9], 1)
+
+    # 0th Order Network Flow
+    x1 = Dense(400, activation='elu')(inputs)
+    x2 = Dense(95, activation='elu')(x1)
+    x3 = Dense(200, activation='elu')(x2)
+    x4 = Dense(95, activation='elu')(x3)
+    res_add = Add()([x2, x4])
+    x5 = Dense(200, activation='elu')(res_add)
+    x6 = Dense(95, activation='linear')(x5)
+
+    model = Model(input=inputs, output=x6)
+
+    opt_func = RMSprop(lr=0.0001)
+    model.compile(loss='mse', optimizer=opt_func)
+    print(model.summary())
+    return model
+
 
 
 def build_base_network_sh_8th():

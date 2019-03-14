@@ -55,7 +55,7 @@ def eval_minimized_zeta(D, n, gtab, scale):
 
 
 def returns_best_zeta(actual_data, radial_deg, gtab, init_guess):
-    zeta = minimize(lambda x: eval_minimized_zeta(actual_data[:1000, :], radial_deg, gtab, x), init_guess)['x']
+    zeta = minimize(lambda x: eval_minimized_zeta(actual_data[:5000, :], radial_deg, gtab, x), init_guess)['x']
     print(zeta)
     return zeta
 
@@ -100,7 +100,7 @@ def return_mse_vector_coeffs_preds(b3k_data, b3k_shore_preds, plot_title):
         mse_vector[i] = temp_mse
 
     # Parameter to control the outlier MSE values
-    '''
+
     mse_lambda = 0.01
     mse_vector[mse_vector >= mse_lambda] = mse_lambda
 
@@ -112,14 +112,14 @@ def return_mse_vector_coeffs_preds(b3k_data, b3k_shore_preds, plot_title):
     bin_list = np.linspace(min_edge, max_edge, Nplus1)
 
     n, bins, patches = plt.hist(x=mse_vector, bins=bin_list, color='#0504aa',
-                                alpha=0.7, rwidth=0.85, histtype='step')
+                                alpha=0.7, rwidth=0.85, histtype='bar')
     plt.grid(axis='y', alpha=0.75)
     plt.xlabel('Mean Squared Error')
     plt.ylabel('Number of Voxels - Total 57000')
     plt.title(plot_title)
     maxfreq = n.max()
     plt.show()
-    '''
+
 
     return mse_vector
 
@@ -139,7 +139,7 @@ def return_mse_vector_coeffs_preds_log(b3k_data, b3k_shore_preds, plot_title):
         mse_vector[i] = temp_mse
 
     # Parameter to control the outlier MSE values
-    '''
+
     mse_lambda = 0.01
     mse_vector[mse_vector >= mse_lambda] = mse_lambda
 
@@ -158,7 +158,7 @@ def return_mse_vector_coeffs_preds_log(b3k_data, b3k_shore_preds, plot_title):
     plt.title(plot_title)
     maxfreq = n.max()
     plt.show()
-    '''
+
 
     return mse_vector
 
